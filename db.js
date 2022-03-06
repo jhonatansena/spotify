@@ -1,12 +1,16 @@
 const mongoose = require("mongoose");
 
+const { DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME } = process.env;
+
 module.exports = async () => {
-  const connectionParams = {
+  const options = {
+    maxPoolSize: 50,
+    wtimeoutMS: 2500,
     useNewUrlParser: true,
-    useUnifiedTopology: true,
   };
   try {
-    await mongoose.connect(process.env.DB_HOST, connectionParams);
+    const url = `mongodb://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`;
+    await mongoose.connect(url, options);
     console.log("connected to database successfully");
   } catch (error) {
     console.log("could not connect to database.", error);
